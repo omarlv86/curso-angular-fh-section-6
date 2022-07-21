@@ -11,27 +11,26 @@ export class SpotifyService {
     console.log('Spotify Service listo')
   }
 
-  getNewReleases(){
+  getQuery( query: string){
+    const url = `https://api.spotify.com/v1/${query}`;
 
     const headers = new HttpHeaders({
-      'Authorization':'Bearer BQD3L3bGY-9RNAccVHlfIyueCNQio0RnWYinGZlp88Uvu73XjuNpG95fcO9nKPyIh1aOQbm-CiY_Whvk9o0dgT8FmE6b8TfsL2CjZP5pUbACv9M8TQE'
+      'Authorization':'Bearer BQCiVF1TQFa7_ZqNjAtcSo0lWiyuja9s9ff3MAgPtnRTpT8QXM5DoZfdEM9DuEi0Rm3IuuwX9PS_qlEvBCJHW71I_HPdO5Cv68lq0lw8o5H7VmmI1uM'
     });
 
-    return this.http.get('https://api.spotify.com/v1/browse/new-releases?limit=20', { headers })
-      .pipe( map( (data:any) => {
-      return data.albums.items;
-      }) 
-    )
+    return this.http.get(url, { headers });
+  }
+
+  getNewReleases(){
+
+    return this.getQuery('browse/new-releases?limit=20')
+            .pipe( map( (data:any) => data.albums.items) )
+
   }
 
   getArtista( termino: string ){
-    const headers = new HttpHeaders({
-      'Authorization':'Bearer BQD3L3bGY-9RNAccVHlfIyueCNQio0RnWYinGZlp88Uvu73XjuNpG95fcO9nKPyIh1aOQbm-CiY_Whvk9o0dgT8FmE6b8TfsL2CjZP5pUbACv9M8TQE'
-    });
 
-    return this.http.get(`https://api.spotify.com/v1/search?q=${ termino }&type=artist&limit=15`, { headers })
-      .pipe(
-        map( ( data:any ) => data.artists.items )
-      );
+    return this.getQuery(`search?q=${ termino }&type=artist&limit=15`)
+      .pipe( map(( data:any ) => data.artists.items ) )
   }
 }
